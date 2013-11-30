@@ -8,11 +8,12 @@ class RobotDemo : public SimpleRobot {
 	CANJaguar rollerLeft;
 	CANJaguar rollerRight;
 	CANJaguar shootMotor;
+	CANJaguar belt;
 public:
 	RobotDemo(void) :
 
 		positionEncoder(1), driveLeft(5), driveRight(11), stick(1),
-				rollerLeft(2), rollerRight(3), shootMotor(4) {
+				rollerLeft(2), rollerRight(3), shootMotor(4), belt(6) {
 		Watchdog().SetExpiration(1);
 	}
 
@@ -64,11 +65,18 @@ public:
 			} else if (stick.GetRawButton(8)==false) {
 				button8Pressed = false;
 			}
-			if (stick.GetRawButton(1)){
-				shooterSpeed = 1;}
-			if (stick.GetRawButton(2)){
-				shooterSpeed = 0;}
+			if (stick.GetRawButton(1)) {
+				shooterSpeed = 1;
+			}
+			if (stick.GetRawButton(2)) {
+				shooterSpeed = 0;
+			}
 			shootMotor.Set(shooterSpeed);
+			if (stick.GetRawButton(7)) {
+				belt.Set(1);
+			} 
+			else {
+				belt.Set(0);}
 		}
 	}
 
