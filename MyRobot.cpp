@@ -7,11 +7,12 @@ class RobotDemo : public SimpleRobot {
 	CANJaguar driveRight;
 	CANJaguar rollerLeft;
 	CANJaguar rollerRight;
+	CANJaguar shootMotor;
 public:
 	RobotDemo(void) :
 
 		positionEncoder(1), driveLeft(5), driveRight(11), stick(1),
-				rollerLeft(2), rollerRight(3) {
+				rollerLeft(2), rollerRight(3), shootMotor(4) {
 		Watchdog().SetExpiration(1);
 	}
 
@@ -25,6 +26,9 @@ public:
 	void OperatorControl(void) {
 		//DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 		Watchdog().SetEnabled(true);
+		bool button6Pressed = false;
+		bool button8Pressed = false;
+		float shooterSpeed = 0.0;
 		while (IsOperatorControl()) {
 			Watchdog().Feed();
 			driveLeft.Set(stick.GetRawAxis(2));
@@ -41,11 +45,30 @@ public:
 			 dsLCD->UpdateLCD();*/
 			if (stick.GetRawButton(5)) {
 				rollerLeft.Set(1);
-				rollerRight.Set(1);}
-			else{
+				rollerRight.Set(1);
+			} else {
 				rollerLeft.Set(0);
 				rollerRight.Set(0);
 			}
+			if (stick.GetRawButton(6) && shooterSpeed < 1 && button6Pressed
+					== false) {
+				shooterSpeed += .1;
+				button6Pressed = true;
+			} else if (stick.GetRawButton(6)==false) {
+				button6Pressed = false;
+			}
+			if (stick.GetRawButton(8) && shooterSpeed> 0 && button8Pressed
+					== false) {
+				shooterSpeed -= .1;
+				button8Pressed = true;
+			} else if (stick.GetRawButton(8)==false) {
+				button8Pressed = false;
+			}
+			if (stick.GetRawButton(1)){
+				shooterSpeed = 1;}
+			if (stick.GetRawButton(2)){
+				shooterSpeed = 0;}
+			shootMotor.Set(shooterSpeed);
 		}
 	}
 
