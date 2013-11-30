@@ -3,14 +3,15 @@
 class RobotDemo : public SimpleRobot {
 	Joystick stick;
 	AnalogChannel positionEncoder; // only joystick
-	CANJaguar controllerLeft;
-	CANJaguar controllerRight;
-
+	CANJaguar driveLeft;
+	CANJaguar driveRight;
+	CANJaguar rollerLeft;
+	CANJaguar rollerRight;
 public:
 	RobotDemo(void) :
 
-		positionEncoder(1),
-				controllerLeft(5), controllerRight(11), stick(1) {
+		positionEncoder(1), driveLeft(5), driveRight(11), stick(1),
+				rollerLeft(2), rollerRight(3) {
 		Watchdog().SetExpiration(1);
 	}
 
@@ -26,19 +27,21 @@ public:
 		Watchdog().SetEnabled(true);
 		while (IsOperatorControl()) {
 			Watchdog().Feed();
-			controllerLeft.Set(stick.GetRawAxis(2));
-			controllerRight.Set(stick.GetRawAxis(4));
-			    //printf("Speed: %f\n", speed);
-				//printf("Voltage: %f\n", voltage);
-				/*dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Speed: %f",
-						speed);
-				dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Voltage: %f",
-						voltage);
-				
-				dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Diff: %f",
-					    diff);
-				dsLCD->UpdateLCD();*/
-			
+			driveLeft.Set(stick.GetRawAxis(2));
+			driveRight.Set(stick.GetRawAxis(4));
+			//printf("Speed: %f\n", speed);
+			//printf("Voltage: %f\n", voltage);
+			/*dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Speed: %f",
+			 speed);
+			 dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Voltage: %f",
+			 voltage);
+			 
+			 dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Diff: %f",
+			 diff);
+			 dsLCD->UpdateLCD();*/
+			if (stick.GetRawButton(5)) {
+				rollerLeft.Set(1);
+				rollerRight.Set(1);}
 		}
 	}
 
