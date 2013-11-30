@@ -42,6 +42,10 @@ public:
 			if (stick.GetRawButton(5)) {
 				rollerLeft.Set(1);
 				rollerRight.Set(1);}
+			else{
+				rollerLeft.Set(0);
+				rollerRight.Set(0);
+			}
 		}
 	}
 
