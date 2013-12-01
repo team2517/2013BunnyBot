@@ -9,11 +9,14 @@ class RobotDemo : public SimpleRobot {
 	CANJaguar rollerRight;
 	CANJaguar shootMotor;
 	CANJaguar belt;
+	Servo bunnyDropFront;
+    Servo bunnyDropBack;
 public:
 	RobotDemo(void) :
 
-		positionEncoder(1), driveLeft(5), driveRight(11), stick(1),
-				rollerLeft(2), rollerRight(3), shootMotor(4), belt(6) {
+		driveLeft(5), driveRight(11), stick(1),
+				rollerLeft(2), rollerRight(3), shootMotor(4), belt(6),
+				bunnyDropFront(1), bunnyDropBack(2) {
 		Watchdog().SetExpiration(1);
 	}
 
