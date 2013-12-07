@@ -1,9 +1,16 @@
 #include "WPILib.h"
+#include "math.h"
+#define x			0
+#define y			1
+#define FL			0
+#define FR			1
+#define BR			2
+#define BL			3
+#define mag			2
+#define theta		3
 
 class RobotDemo : public SimpleRobot {
 	Joystick stick;
-	CANJaguar driveLeft;
-	CANJaguar driveRight;
 	CANJaguar rollerLeft;
 	CANJaguar rollerRight;
 	CANJaguar shootMotor;
@@ -13,8 +20,8 @@ class RobotDemo : public SimpleRobot {
 public:
 	RobotDemo(void) :
 
-		stick(1), driveLeft(5), driveRight(11), rollerLeft(2), rollerRight(3), 
-		shootMotor(4), belt(6), bunnyDropFront(1), bunnyDropBack(2) 
+		stick(1), rollerLeft(2), rollerRight(3), shootMotor(4), belt(6), 
+		bunnyDropFront(1), bunnyDropBack(2) 
 	{
 		Watchdog().SetExpiration(1);
 	}
@@ -34,24 +41,67 @@ public:
 		bool button6Pressed = false;
 		bool button8Pressed = false;
 		float shooterSpeed = 0.0;
+		float leftStickVec[2];
+		float phi;
+		float wheelVec[4][4];
+		int i;
+		int j;
+		const float PI = 3.1415926535;
 		
 		while (IsOperatorControl()) 
 		{
 			Watchdog().Feed();
 			
-			driveLeft.Set(stick.GetRawAxis(2));
-			driveRight.Set(stick.GetRawAxis(4));
+			leftStickVec[x] = stick.GetRawAxis(1);
+			leftStickVec[y] = stick.GetRawAxis(2);
+			phi = stick.GetRawAxis(3); //Should be right stick x.
 			
-			//printf("Speed: %f\n", speed);
-			//printf("Voltage: %f\n", voltage);
-			/*dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Speed: %f",
-			 speed);
-			 dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Voltage: %f",
-			 voltage);
-			 
-			 dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Diff: %f",
-			 diff);
-			 dsLCD->UpdateLCD();*/
+			//Need to change these values based on center/wheel placement.
+			wheelVec[FL][x] = .707 * phi;
+			wheelVec[FL][y] = .707 * phi;
+			wheelVec[FR][x] = .707 * phi;
+			wheelVec[FR][y] = -.707 * phi;
+			wheelVec[BL][x] = -.707 * phi;
+			wheelVec[BL][y] = -.707 * phi;
+			wheelVec[BR][x] = -.707 * phi;
+			wheelVec[BR][y] = .707 * phi;
+			
+			wheelVec[FL][x] += leftStickVec[x];
+			wheelVec[FL][y] += leftStickVec[y];
+			wheelVec[FR][x] += leftStickVec[x];
+			wheelVec[FR][y] += leftStickVec[y];
+			wheelVec[BL][x] += leftStickVec[x];
+			wheelVec[BL][y] += leftStickVec[y];
+			wheelVec[BR][x] += leftStickVec[x];
+			wheelVec[BR][y] += leftStickVec[y];
+			
+			for(i = 0; i <= 3; i++)
+			{
+				wheelVec[i][mag] = sqrt(pow(wheelVec[i][x], 2) 
+						+ pow(wheelVec[i][y], 2));
+			}
+			
+			for(i = 0; i <= 3; i++)
+			{
+				if(wheelVec[i][mag] > 1)
+				{
+					for(j = 0; j <= 3; j++)
+					{
+						wheelVec[j][mag] = wheelVec[j][mag] / wheelVec[i][mag];
+					}
+				}
+				
+			}
+			
+			for(i = 0; i <= 3; i++)
+			{
+				wheelVec[i][theta] = atan(wheelVec[i][y] / wheelVec[i][x]);
+				
+				if(wheelVec[i][x] < 0)
+				{
+					wheelVec[i][theta] += PI;
+				}
+			}
 			
 			if (stick.GetRawButton(3))
 			{
