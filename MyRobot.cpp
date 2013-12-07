@@ -2,7 +2,6 @@
 
 class RobotDemo : public SimpleRobot {
 	Joystick stick;
-	AnalogChannel positionEncoder; // only joystick
 	CANJaguar driveLeft;
 	CANJaguar driveRight;
 	CANJaguar rollerLeft;
@@ -14,29 +13,35 @@ class RobotDemo : public SimpleRobot {
 public:
 	RobotDemo(void) :
 
-		driveLeft(5), driveRight(11), stick(1),
-				rollerLeft(2), rollerRight(3), shootMotor(4), belt(6),
-				bunnyDropFront(1), bunnyDropBack(2) {
+		stick(1), driveLeft(5), driveRight(11), rollerLeft(2), rollerRight(3), 
+		shootMotor(4), belt(6), bunnyDropFront(1), bunnyDropBack(2) 
+	{
 		Watchdog().SetExpiration(1);
 	}
 
-	void Autonomous(void) {
+	void Autonomous(void)
+	{
 
 	}
 
 	/**
 	 * Runs the motors with arcade steering. 
 	 */
-	void OperatorControl(void) {
+	void OperatorControl(void) 
+	{
 		//DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 		Watchdog().SetEnabled(true);
 		bool button6Pressed = false;
 		bool button8Pressed = false;
 		float shooterSpeed = 0.0;
-		while (IsOperatorControl()) {
+		
+		while (IsOperatorControl()) 
+		{
 			Watchdog().Feed();
+			
 			driveLeft.Set(stick.GetRawAxis(2));
 			driveRight.Set(stick.GetRawAxis(4));
+			
 			//printf("Speed: %f\n", speed);
 			//printf("Voltage: %f\n", voltage);
 			/*dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Speed: %f",
@@ -47,46 +52,69 @@ public:
 			 dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Diff: %f",
 			 diff);
 			 dsLCD->UpdateLCD();*/
-			if (stick.GetRawButton(5)) {
+			
+			if (stick.GetRawButton(3))
+			{
+				bunnyDropFront.Set(1);
+			}
+			if (stick.GetRawButton(4))
+			{
+				bunnyDropFront.Set(-1);
+			}
+			if (stick.GetRawButton(5)) 
+			{
 				rollerLeft.Set(1);
 				rollerRight.Set(1);
-			} else {
+			} 
+			else 
+			{
 				rollerLeft.Set(0);
 				rollerRight.Set(0);
 			}
 			if (stick.GetRawButton(6) && shooterSpeed < 1 && button6Pressed
-					== false) {
+					== false) 
+			{
 				shooterSpeed += .1;
 				button6Pressed = true;
-			} else if (stick.GetRawButton(6)==false) {
+			} 
+			else if (stick.GetRawButton(6)==false) 
+			{
 				button6Pressed = false;
 			}
 			if (stick.GetRawButton(8) && shooterSpeed> 0 && button8Pressed
-					== false) {
+					== false) 
+			{
 				shooterSpeed -= .1;
 				button8Pressed = true;
-			} else if (stick.GetRawButton(8)==false) {
+			} 
+			else if (stick.GetRawButton(8)==false) 
+			{
 				button8Pressed = false;
 			}
-			if (stick.GetRawButton(1)) {
+			if (stick.GetRawButton(1)) 
+			{
 				shooterSpeed = 1;
 			}
-			if (stick.GetRawButton(2)) {
+			if (stick.GetRawButton(2)) 
+			{
 				shooterSpeed = 0;
 			}
 			shootMotor.Set(shooterSpeed);
-			if (stick.GetRawButton(7)) {
+			if (stick.GetRawButton(7)) 
+			{
 				belt.Set(1);
 			} 
-			else {
+			else 
+			{
 				belt.Set(0);}
+			}
 		}
-	}
 
 	/**
 	 * Runs during test mode
 	 */
-	void Test() {
+	void Test() 
+	{
 
 	}
 };
