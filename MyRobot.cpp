@@ -1,18 +1,16 @@
 #include "WPILib.h"
 #include "math.h"
-#define X			0
-#define Y			1
 #define FL			0
 #define FR			1
 #define BR			2
 #define BL			3
-#define MAG			2
-#define THETA		3
+#define X			0
+#define Y			1
 #define PI			3.1415926535
 
 struct wheelVector
 {
-	float x, y, mag, theta;
+	float x, y, mag, tarTheta, curTheta, turnVel;
 };
 
 class RobotDemo : public SimpleRobot {
@@ -21,13 +19,28 @@ class RobotDemo : public SimpleRobot {
 	CANJaguar rollerRight;
 	CANJaguar shootMotor;
 	CANJaguar belt;
+	CANJaguar turnWheelFL;
+	CANJaguar turnWheelFR;
+	CANJaguar turnWheelBR;
+	CANJaguar turnWheelBL;
+	CANJaguar moveWheelFL;
+	CANJaguar moveWheelFR;
+	CANJaguar moveWheelBR;
+	CANJaguar moveWheelBL;
+	AnalogChannel posEncFL;
+	AnalogChannel posEncFR;
+	AnalogChannel posEncBR;
+	AnalogChannel posEncBL;
 	Servo bunnyDropFront;
     Servo bunnyDropBack;
 public:
 	RobotDemo(void) :
 
-		stick(1), rollerLeft(2), rollerRight(3), shootMotor(4), belt(6), 
-		bunnyDropFront(1), bunnyDropBack(2) 
+		stick(1), rollerLeft(2), rollerRight(3), shootMotor(4), belt(5),
+		turnWheelFL(6), turnWheelFR(7), turnWheelBR(8), turnWheelBL(9),
+		moveWheelFL(10), moveWheelFR(11), moveWheelBR(12), moveWheelBL(13), 
+		posEncFL(1), posEncFR(2), posEncBR(3), posEncBL(4),bunnyDropFront(1), 
+		bunnyDropBack(2) 
 	{
 		Watchdog().SetExpiration(1);
 	}
@@ -100,13 +113,39 @@ public:
 			
 			for(i = 0; i <= 3; i++)
 			{
-				wheel[i].theta = atan(wheel[i].y / wheel[i].x);
+				wheel[i].tarTheta = atan(wheel[i].y / wheel[i].x);
 				
 				if(wheel[i].x < 0)
 				{
-					wheel[i].theta += PI;
+					wheel[i].tarTheta += PI;
 				}
 			}
+			
+			wheel[FL].curTheta = posEncFL.GetVoltage() / 5 * 2 * PI;
+			wheel[FR].curTheta = posEncFR.GetVoltage() / 5 * 2 * PI;
+			wheel[BR].curTheta = posEncBR.GetVoltage()/ 5 * 2 * PI;
+			wheel[BL].curTheta = posEncBL.GetVoltage() / 5 * 2 * PI;
+			
+			for(i=0; i <= 3; i++)
+			{
+				wheel[i].tarTheta -= wheel[i].curTheta;
+				
+				if(wheel[i].tarTheta > PI)
+				{
+					wheel[i].tarTheta -= 2*PI;
+				}
+				else if(wheel[i].tarTheta < -PI)
+				{
+					wheel[i].tarTheta += 2*PI;
+				}
+				
+				wheel[i].turnVel = wheel[i].tarTheta / PI;
+			}
+			
+			turnWheelFL.Set(wheel[FL].turnVel);
+			turnWheelFR.Set(wheel[FR].turnVel);
+			turnWheelBR.Set(wheel[BR].turnVel);
+			turnWheelBL.Set(wheel[BL].turnVel);
 			
 			if (stick.GetRawButton(3))
 			{
