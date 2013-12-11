@@ -1,13 +1,19 @@
 #include "WPILib.h"
 #include "math.h"
-#define x			0
-#define y			1
+#define X			0
+#define Y			1
 #define FL			0
 #define FR			1
 #define BR			2
 #define BL			3
-#define mag			2
-#define theta		3
+#define MAG			2
+#define THETA		3
+#define PI			3.1415926535
+
+struct wheelVector
+{
+	float x, y, mag, theta;
+};
 
 class RobotDemo : public SimpleRobot {
 	Joystick stick;
@@ -43,51 +49,50 @@ public:
 		float shooterSpeed = 0.0;
 		float leftStickVec[2];
 		float phi;
-		float wheelVec[4][4];
+		wheelVector wheel[4];
 		int i;
 		int j;
-		const float PI = 3.1415926535;
 		
 		while (IsOperatorControl()) 
 		{
 			Watchdog().Feed();
 			
-			leftStickVec[x] = stick.GetRawAxis(1);
-			leftStickVec[y] = stick.GetRawAxis(2);
+			leftStickVec[X] = stick.GetRawAxis(1);
+			leftStickVec[Y] = stick.GetRawAxis(2);
 			phi = stick.GetRawAxis(3); //Should be right stick x.
 			
 			//Need to change these values based on center/wheel placement.
-			wheelVec[FL][x] = .707 * phi;
-			wheelVec[FL][y] = .707 * phi;
-			wheelVec[FR][x] = .707 * phi;
-			wheelVec[FR][y] = -.707 * phi;
-			wheelVec[BL][x] = -.707 * phi;
-			wheelVec[BL][y] = -.707 * phi;
-			wheelVec[BR][x] = -.707 * phi;
-			wheelVec[BR][y] = .707 * phi;
+			wheel[FL].x = .707 * phi;
+			wheel[FL].y = .707 * phi;
+			wheel[FR].x = .707 * phi;
+			wheel[FR].y = -.707 * phi;
+			wheel[BL].x = -.707 * phi;
+			wheel[BL].y = -.707 * phi;
+			wheel[BR].x = -.707 * phi;
+			wheel[BR].y = .707 * phi;
 			
-			wheelVec[FL][x] += leftStickVec[x];
-			wheelVec[FL][y] += leftStickVec[y];
-			wheelVec[FR][x] += leftStickVec[x];
-			wheelVec[FR][y] += leftStickVec[y];
-			wheelVec[BL][x] += leftStickVec[x];
-			wheelVec[BL][y] += leftStickVec[y];
-			wheelVec[BR][x] += leftStickVec[x];
-			wheelVec[BR][y] += leftStickVec[y];
+			wheel[FL].x += leftStickVec[X];
+			wheel[FL].y += leftStickVec[Y];
+			wheel[FR].x += leftStickVec[X];
+			wheel[FR].y += leftStickVec[Y];
+			wheel[BL].x += leftStickVec[X];
+			wheel[BL].y += leftStickVec[Y];
+			wheel[BR].x += leftStickVec[X];
+			wheel[BR].y += leftStickVec[Y];
 			
 			for(i = 0; i <= 3; i++)
 			{
-				wheelVec[i][mag] = sqrt(pow(wheelVec[i][x], 2) 
-						+ pow(wheelVec[i][y], 2));
+				wheel[i].mag = sqrt(pow(wheel[i].x, 2) 
+						+ pow(wheel[i].y, 2));
 			}
 			
 			for(i = 0; i <= 3; i++)
 			{
-				if(wheelVec[i][mag] > 1)
+				if(wheel[i].mag > 1)
 				{
 					for(j = 0; j <= 3; j++)
 					{
-						wheelVec[j][mag] = wheelVec[j][mag] / wheelVec[i][mag];
+						wheel[j].mag = wheel[j].mag / wheel[i].mag;
 					}
 				}
 				
@@ -95,11 +100,11 @@ public:
 			
 			for(i = 0; i <= 3; i++)
 			{
-				wheelVec[i][theta] = atan(wheelVec[i][y] / wheelVec[i][x]);
+				wheel[i].theta = atan(wheel[i].y / wheel[i].x);
 				
-				if(wheelVec[i][x] < 0)
+				if(wheel[i].x < 0)
 				{
-					wheelVec[i][theta] += PI;
+					wheel[i].theta += PI;
 				}
 			}
 			
