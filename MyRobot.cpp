@@ -146,6 +146,10 @@ public:
 			turnWheelFR.Set(wheel[FR].turnVel);
 			turnWheelBR.Set(wheel[BR].turnVel);
 			turnWheelBL.Set(wheel[BL].turnVel);
+			moveWheelFL.Set(wheel[FL].mag);
+			moveWheelFR.Set(wheel[FR].mag);
+			moveWheelBR.Set(wheel[BR].mag);
+			moveWheelBL.Set(wheel[BL].mag);
 			
 			if (stick.GetRawButton(3))
 			{
