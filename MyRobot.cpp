@@ -14,7 +14,7 @@ public:
 	RobotDemo(void) :
 
 		stick(1), driveLeft(5), driveRight(11), rollerLeft(2), rollerRight(3), 
-		shootMotor(4), belt(6), bunnyDropFront(1), bunnyDropBack(2) 
+		shootMotor(4), belt(6), bunnyDropFront(2), bunnyDropBack(1) 
 	{
 		Watchdog().SetExpiration(1);
 	}
@@ -59,7 +59,7 @@ public:
 			}
 			if (stick.GetRawButton(4))
 			{
-				bunnyDropFront.Set(-1);
+				bunnyDropFront.Set(0);
 			}
 			if (stick.GetRawButton(5)) 
 			{
