@@ -13,8 +13,8 @@ class RobotDemo : public SimpleRobot {
 public:
 	RobotDemo(void) :
 
-		stick(1), driveLeft(5), driveRight(11), rollerLeft(2), rollerRight(3), 
-		shootMotor(4), belt(6), bunnyDropFront(2), bunnyDropBack(1) 
+		stick(1), driveLeft(2), driveRight(30), rollerLeft(9), rollerRight(11), 
+		shootMotor(10), belt(13), bunnyDropFront(2), bunnyDropBack(1) 
 	{
 		Watchdog().SetExpiration(1);
 	}
@@ -29,7 +29,7 @@ public:
 	 */
 	void OperatorControl(void) 
 	{
-		//DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
+		DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 		Watchdog().SetEnabled(true);
 		bool button6Pressed = false;
 		bool button8Pressed = false;
@@ -44,22 +44,18 @@ public:
 			
 			//printf("Speed: %f\n", speed);
 			//printf("Voltage: %f\n", voltage);
-			/*dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "Speed: %f",
-			 speed);
-			 dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Voltage: %f",
-			 voltage);
-			 
-			 dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Diff: %f",
-			 diff);
-			 dsLCD->UpdateLCD();*/
+			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "I'm running!");
+			 dsLCD->UpdateLCD();
 			
 			if (stick.GetRawButton(3))
 			{
 				bunnyDropFront.Set(1);
+				bunnyDropBack.Set(1);
 			}
 			if (stick.GetRawButton(4))
 			{
 				bunnyDropFront.Set(0);
+				bunnyDropBack.Set(0);
 			}
 			if (stick.GetRawButton(5)) 
 			{
