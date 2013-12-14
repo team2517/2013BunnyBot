@@ -139,6 +139,17 @@ public:
 					wheel[i].tarTheta += 2*PI;
 				}
 				
+				if(wheel[i].tarTheta > PI/4)
+				{
+					wheel[i].tarTheta -= pi/2;
+					wheel[i].mag = wheel[i].mag * -1;
+				}
+				else if(wheel[i].tarTheta < pi/4)
+				{
+					wheel[i].tarTheta += pi/2;
+					wheel[i].mag = wheel[i].mag * -1;
+				}
+				
 				wheel[i].turnVel = wheel[i].tarTheta / PI;
 			}
 			
