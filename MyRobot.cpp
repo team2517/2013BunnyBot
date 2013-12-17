@@ -15,6 +15,19 @@ public:
 
 		stick(1), driveLeft(2), driveRight(30), rollerLeft(9), rollerRight(11), 
 		shootMotor(10), belt(13), bunnyDropFront(2), bunnyDropBack(1) 
+		/*12-Open
+		10-Side Ball Shooter
+		9-Front Ball Roller
+		13-Open
+		30-Right Drive Cim
+		2-Left Drive Cim
+		8-Open
+		*/
+		
+		//TODO: Reverse Left Motor
+		//TODO: Add motor deadzones
+		//TODO: Reverse Back Roller
+		//TODO: Ask if reversing shooter is OK.
 	{
 		Watchdog().SetExpiration(1);
 	}
