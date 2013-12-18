@@ -10,6 +10,7 @@ class RobotDemo : public SimpleRobot {
 	CANJaguar belt;
 	Servo bunnyDropFront;
     Servo bunnyDropBack;
+    Timer autoTimer;
 public:
 	RobotDemo(void) :
 
@@ -24,19 +25,27 @@ public:
 		8-Open
 		*/
 		
-		//TODO: Reverse Left Motor
-		//TODO: Add motor deadzones
-		//TODO: Reverse Back Roller
-		//TODO: Ask if reversing shooter is OK.
 	{
 		Watchdog().SetExpiration(1);
 	}
 
 	void Autonomous(void)
-	{
-
-	}
-
+	{ 
+		autoTimer.Start(); 
+		while(true)
+		{
+			if(autoTimer.Get()>14)
+			{
+				bunnyDropFront.Set(1);
+			}
+			else
+			{
+				bunnyDropFront.Set(0);
+			}
+		}
+	} 
+	
+	
 	/**
 	 * Runs the motors with arcade steering. 
 	 */
@@ -106,7 +115,7 @@ public:
 			{
 				button6Pressed = false;
 			}
-			if (stick.GetRawButton(8) && shooterSpeed> 0 && button8Pressed
+			if (stick.GetRawButton(8) && shooterSpeed > 0 && button8Pressed
 					== false) 
 			{
 				shooterSpeed -= .1;
