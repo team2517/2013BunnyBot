@@ -51,29 +51,45 @@ public:
 		while (IsOperatorControl()) 
 		{
 			Watchdog().Feed();
-			
-			driveLeft.Set(stick.GetRawAxis(2));
-			driveRight.Set(stick.GetRawAxis(4));
+			if(stick.GetRawAxis(2) > .05 || stick.GetRawAxis(2) < -.05)
+			{
+				driveLeft.Set(-stick.GetRawAxis(2));
+			}
+			else
+			{
+				driveLeft.Set(0);
+			}
+			if(stick.GetRawAxis(4) > .05 || stick.GetRawAxis(4) < -.05)
+			{
+				driveRight.Set(stick.GetRawAxis(4));
+			}
+			else
+			{
+				driveRight.Set(0);
+			}
 			
 			//printf("Speed: %f\n", speed);
 			//printf("Voltage: %f\n", voltage);
-			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "I'm running!");
-			 dsLCD->UpdateLCD();
+			
 			
 			if (stick.GetRawButton(3))
 			{
 				bunnyDropFront.Set(1);
 				bunnyDropBack.Set(1);
+				dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Button Pressed");
+				
 			}
 			if (stick.GetRawButton(4))
 			{
 				bunnyDropFront.Set(0);
 				bunnyDropBack.Set(0);
+				dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "");
+
 			}
 			if (stick.GetRawButton(5)) 
 			{
 				rollerLeft.Set(1);
-				rollerRight.Set(1);
+				rollerRight.Set(-1);
 			} 
 			else 
 			{
@@ -115,9 +131,13 @@ public:
 			} 
 			else 
 			{
-				belt.Set(0);}
+				belt.Set(0);
 			}
+			
+			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "shooter = %f", shooterSpeed);
+			dsLCD->UpdateLCD();
 		}
+	}
 
 	/**
 	 * Runs during test mode
