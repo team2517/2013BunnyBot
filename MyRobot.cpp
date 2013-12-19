@@ -34,6 +34,16 @@ public:
 		autoTimer.Start(); 
 		while(true)
 		{
+			if(autoTimer.Get() < 10)
+			{
+				driveLeft.Set(1);
+				driveRight.Set(1);
+			}
+			else
+			{
+				driveLeft.Set(0);
+				driveRight.Set(0);
+			}
 			if(autoTimer.Get()>14)
 			{
 				bunnyDropFront.Set(1);
