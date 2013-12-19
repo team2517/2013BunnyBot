@@ -136,7 +136,7 @@ public:
 			shootMotor.Set(shooterSpeed);
 			if (stick.GetRawButton(7)) 
 			{
-				belt.Set(1);
+				belt.Set(.3);
 			} 
 			else 
 			{
