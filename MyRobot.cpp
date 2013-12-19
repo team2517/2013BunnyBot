@@ -60,91 +60,65 @@ public:
 		while (IsOperatorControl()) 
 		{
 			Watchdog().Feed();
-			if(stick.GetRawAxis(2) > .05 || stick.GetRawAxis(2) < -.05)
+			
+			if(stick.GetRawButton(1))
 			{
-				driveLeft.Set(-stick.GetRawAxis(2));
+				driveLeft.Set(.1);
+				driveRight.Set(-.1);
+			}
+			else if(stick.GetRawButton(2))
+			{
+				driveLeft.Set(.2);
+				driveRight.Set(-.2);
+			}
+			else if(stick.GetRawButton(3))
+			{
+				driveLeft.Set(.3);
+				driveRight.Set(-.3);
+			}
+			else if(stick.GetRawButton(4))
+			{
+				driveLeft.Set(.4);
+				driveRight.Set(-.4);
+			}
+			else if(stick.GetRawButton(5))
+			{
+				driveLeft.Set(.5);
+				driveRight.Set(-.5);
+			}
+			else if(stick.GetRawButton(6))
+			{
+				driveLeft.Set(.6);
+				driveRight.Set(-.6);
+			}
+			else if(stick.GetRawButton(7))
+			{
+				driveLeft.Set(.7);
+				driveRight.Set(-.7);
+			}
+			else if(stick.GetRawButton(8))
+			{
+				driveLeft.Set(.8);
+				driveRight.Set(-.8);
+			}
+			else if(stick.GetRawButton(9))
+			{
+				driveLeft.Set(.9);
+				driveRight.Set(-.9);
+			}
+			else if(stick.GetRawButton(10))
+			{
+				driveLeft.Set(1);
+				driveRight.Set(-1);
 			}
 			else
 			{
 				driveLeft.Set(0);
-			}
-			if(stick.GetRawAxis(4) > .05 || stick.GetRawAxis(4) < -.05)
-			{
-				driveRight.Set(stick.GetRawAxis(4));
-			}
-			else
-			{
 				driveRight.Set(0);
 			}
 			
-			//printf("Speed: %f\n", speed);
-			//printf("Voltage: %f\n", voltage);
 			
 			
-			if (stick.GetRawButton(3))
-			{
-				bunnyDropFront.Set(1);
-				bunnyDropBack.Set(1);
-				dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Button Pressed");
-				
-			}
-			if (stick.GetRawButton(4))
-			{
-				bunnyDropFront.Set(0);
-				bunnyDropBack.Set(0);
-				dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "");
-
-			}
-			if (stick.GetRawButton(5)) 
-			{
-				rollerLeft.Set(1);
-				rollerRight.Set(-1);
-			} 
-			else 
-			{
-				rollerLeft.Set(0);
-				rollerRight.Set(0);
-			}
-			if (stick.GetRawButton(6) && shooterSpeed < 1 && button6Pressed
-					== false) 
-			{
-				shooterSpeed += .1;
-				button6Pressed = true;
-			} 
-			else if (stick.GetRawButton(6)==false) 
-			{
-				button6Pressed = false;
-			}
-			if (stick.GetRawButton(8) && shooterSpeed > 0 && button8Pressed
-					== false) 
-			{
-				shooterSpeed -= .1;
-				button8Pressed = true;
-			} 
-			else if (stick.GetRawButton(8)==false) 
-			{
-				button8Pressed = false;
-			}
-			if (stick.GetRawButton(1)) 
-			{
-				shooterSpeed = 1;
-			}
-			if (stick.GetRawButton(2)) 
-			{
-				shooterSpeed = 0;
-			}
-			shootMotor.Set(shooterSpeed);
-			if (stick.GetRawButton(7)) 
-			{
-				belt.Set(1);
-			} 
-			else 
-			{
-				belt.Set(0);
-			}
-			
-			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "shooter = %f", shooterSpeed);
-			dsLCD->UpdateLCD();
 		}
 	}
 
