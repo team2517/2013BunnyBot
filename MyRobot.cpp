@@ -56,19 +56,22 @@ public:
 		float leftSpeed, rightSpeed;
 		bool button6Pressed, button8Pressed, button5Pressed, button7Pressed;
 
+		leftSpeed = .55;
+		rightSpeed = -.5;
+		
 		while (IsOperatorControl()) {
 			Watchdog().Feed();
 
 			if (stick.GetRawButton(6) && rightSpeed < 1 && button6Pressed
 					== false) {
-				rightSpeed += .05;
+				rightSpeed += .01;
 				button6Pressed = true;
 			} else if (stick.GetRawButton(6)==false) {
 				button6Pressed = false;
 			}
 			if (stick.GetRawButton(8) && rightSpeed > -1 && button8Pressed
 					== false) {
-				rightSpeed -= .05;
+				rightSpeed -= .01;
 				button8Pressed = true;
 			} else if (stick.GetRawButton(8)==false) {
 				button8Pressed = false;
@@ -76,14 +79,14 @@ public:
 
 			if (stick.GetRawButton(5) && leftSpeed < 1 && button5Pressed
 					== false) {
-				leftSpeed += .05;
+				leftSpeed += .01;
 				button5Pressed = true;
 			} else if (stick.GetRawButton(5)==false) {
 				button5Pressed = false;
 			}
 			if (stick.GetRawButton(7) && leftSpeed > -1 && button7Pressed
 					== false) {
-				leftSpeed -= .05;
+				leftSpeed -= .01;
 				button7Pressed = true;
 			} else if (stick.GetRawButton(7)==false) {
 				button7Pressed = false;
@@ -101,7 +104,9 @@ public:
 			}
 
 			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1,
-					"rightSpeed = %f, leftSpeed = %f", rightSpeed, leftSpeed);
+					"rightSpeed = %f", rightSpeed);
+			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1,
+								"leftSpeed = %f", leftSpeed);
 			dsLCD->UpdateLCD();
 		}
 	}
