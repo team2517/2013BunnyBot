@@ -15,8 +15,8 @@ public:
 	RobotDemo(void) :
 
 		stick(1), driveLeft(2), driveRight(30), rollerLeft(9), rollerRight(11), 
-		shootMotor(10), belt(13), bunnyDropFront(2), bunnyDropBack(1) 
-		/*12-Open
+		shootMotor(10), belt(12), bunnyDropFront(2), bunnyDropBack(1) 
+		/*12- Track Banebot
 		10-Side Ball Shooter
 		9-Front Ball Roller
 		13-Open
@@ -146,7 +146,7 @@ public:
 			shootMotor.Set(shooterSpeed);
 			if (stick.GetRawButton(7)) 
 			{
-				belt.Set(.3);
+				belt.Set(-.5);
 			} 
 			else 
 			{
