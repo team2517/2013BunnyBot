@@ -34,10 +34,10 @@ public:
 		autoTimer.Start(); 
 		while(true)
 		{
-			if(autoTimer.Get() < 10)
+			if(autoTimer.Get() < 7.41)
 			{
-				driveLeft.Set(1);
-				driveRight.Set(1);
+				driveLeft.Set(.53);
+				driveRight.Set(-.5);
 			}
 			else
 			{
@@ -47,10 +47,12 @@ public:
 			if(autoTimer.Get()>14)
 			{
 				bunnyDropFront.Set(1);
+				bunnyDropBack.Set(0);
 			}
 			else
 			{
 				bunnyDropFront.Set(0);
+				bunnyDropBack.Set(1);
 			}
 		}
 	} 
@@ -65,32 +67,21 @@ public:
 		Watchdog().SetEnabled(true);
 		bool button6Pressed = false;
 		bool button8Pressed = false;
+		bool button3Pressed = false;
+		bool button4Pressed = false;
 		float shooterSpeed = 0.0;
+		float stickMotorRatio = 1.0;
+		
 		
 		while (IsOperatorControl()) 
 		{
 			Watchdog().Feed();
-			if(stick.GetRawAxis(2) > .05 || stick.GetRawAxis(2) < -.05)
-			{
-				driveLeft.Set(-stick.GetRawAxis(2));
-			}
-			else
-			{
-				driveLeft.Set(0);
-			}
-			if(stick.GetRawAxis(4) > .05 || stick.GetRawAxis(4) < -.05)
-			{
-				driveRight.Set(stick.GetRawAxis(4));
-			}
-			else
-			{
-				driveRight.Set(0);
-			}
+			
 			
 			//printf("Speed: %f\n", speed);
 			//printf("Voltage: %f\n", voltage);
 			
-			
+			/*
 			if (stick.GetRawButton(3))
 			{
 				bunnyDropFront.Set(1);
@@ -104,7 +95,7 @@ public:
 				bunnyDropBack.Set(0);
 				dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "");
 
-			}
+			}*/
 			if (stick.GetRawButton(5)) 
 			{
 				rollerLeft.Set(1);
@@ -144,6 +135,28 @@ public:
 				shooterSpeed = 0;
 			}
 			shootMotor.Set(shooterSpeed);
+			
+			if (stick.GetRawButton(4) && stickMotorRatio < 1 && button4Pressed
+					== false) 
+			{
+				stickMotorRatio += .05;
+				button4Pressed = true;
+			} 
+			else if (stick.GetRawButton(4)==false) 
+			{
+				button4Pressed = false;
+			}
+			if (stick.GetRawButton(3) && stickMotorRatio > 0 && button3Pressed
+					== false) 
+			{
+				stickMotorRatio -= .05;
+				button3Pressed = true;
+			} 
+			else if (stick.GetRawButton(8)==false) 
+			{
+				button3Pressed = false;
+			}
+			
 			if (stick.GetRawButton(7)) 
 			{
 				belt.Set(-.5);
@@ -153,7 +166,26 @@ public:
 				belt.Set(0);
 			}
 			
+			if(stick.GetRawAxis(2) > .05 || stick.GetRawAxis(2) < -.05)
+			{
+				driveLeft.Set(stickMotorRatio * -stick.GetRawAxis(2));
+			}
+			else
+			{
+				driveLeft.Set(0);
+			}
+			if(stick.GetRawAxis(4) > .05 || stick.GetRawAxis(4) < -.05)
+			{
+				driveRight.Set(stickMotorRatio * stick.GetRawAxis(4));
+			}
+			else
+			{
+				driveRight.Set(0);
+			}
+			
 			dsLCD->Printf(DriverStationLCD::kUser_Line1, 1, "shooter = %f", shooterSpeed);
+			dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, 
+					"stickMotorRatio = %f", stickMotorRatio);
 			dsLCD->UpdateLCD();
 		}
 	}
