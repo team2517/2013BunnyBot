@@ -46,13 +46,13 @@ public:
 			}
 			if(autoTimer.Get()>14)
 			{
-				bunnyDropFront.Set(1);
-				bunnyDropBack.Set(0);
+				bunnyDropFront.Set(0);
+				bunnyDropBack.Set(1);
 			}
 			else
 			{
-				bunnyDropFront.Set(0);
-				bunnyDropBack.Set(1);
+				bunnyDropFront.Set(1);
+				bunnyDropBack.Set(0);
 			}
 		}
 	} 
@@ -152,7 +152,7 @@ public:
 				stickMotorRatio -= .05;
 				button3Pressed = true;
 			} 
-			else if (stick.GetRawButton(8)==false) 
+			else if (stick.GetRawButton(3)==false) 
 			{
 				button3Pressed = false;
 			}
