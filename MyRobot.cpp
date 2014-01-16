@@ -32,11 +32,15 @@ public:
 	void Autonomous(void)
 	{ 
 		autoTimer.Start(); 
-		while(true)
+		while(autoTimer.Get() < 11)
 		{
-			if(autoTimer.Get() < 7.41)
-			{
-				driveLeft.Set(.53);
+			bunnyDropFront.Set(1);
+			bunnyDropBack.Set(0);
+			
+			if(autoTimer.Get() < 6.5)
+			{	//Turned left at .53 -.5
+				//right at .6 -.5
+				driveLeft.Set(.57);
 				driveRight.Set(-.5);
 			}
 			else
@@ -44,17 +48,10 @@ public:
 				driveLeft.Set(0);
 				driveRight.Set(0);
 			}
-			if(autoTimer.Get()>14)
-			{
-				bunnyDropFront.Set(0);
-				bunnyDropBack.Set(1);
-			}
-			else
-			{
-				bunnyDropFront.Set(1);
-				bunnyDropBack.Set(0);
-			}
 		}
+		
+		bunnyDropFront.Set(0);
+		bunnyDropBack.Set(1);
 	} 
 	
 	
@@ -122,7 +119,7 @@ public:
 				shooterSpeed -= .1;
 				button8Pressed = true;
 			} 
-			else if (stick.GetRawButton(8)==false) 
+			else if (stick.GetRawButton(8) == false)
 			{
 				button8Pressed = false;
 			}
